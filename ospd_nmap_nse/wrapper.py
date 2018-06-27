@@ -22,7 +22,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
 
-import re, string
+import re
+import string
 import subprocess
 import nmap
 import xml.etree.ElementTree as ET
