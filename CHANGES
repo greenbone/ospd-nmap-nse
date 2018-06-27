@@ -1,0 +1,20 @@
+SUMMARY OF RELEASE CHANGES FOR OSPD-NMAP-NSE
+============================================
+
+For detailed code changes, please visit
+ https://github.com/greenbone/ospd-nmap-nse/commits/master
+or get the entire source code repository and view log history:
+$ git clone https://github.com/greenbone/ospd-nmap-nse.git
+$ cd ospd-nmap-nse && git log
+
+
+ospd-nmap-nse 1.0b1 (2018-XX-XX)
+
+This is the first public beta release of ospd-nmap-nse for the
+Greenbone Vulnerability Managmanet System (GVM).
+
+OSPd-nmap-nse is an OSP server implementation to allow a OSP client
+to start the nmap to run script collection and parse the results.
+
+Many thanks to everyone who contributed to this release:
+Juan Jose Nicola
