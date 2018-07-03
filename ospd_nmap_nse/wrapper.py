@@ -366,10 +366,9 @@ class OSPDnmap_nse(OSPDaemon):
                 categ.append(BOOL_CATEGORIES_DIC[opt])
 
         # Add single VTs
-        if options.get('vts') != '':
-            vts = options.get('vts')
+        if self.get_scan_vts(scan_id) != '':
+            vts = self.get_scan_vts(scan_id)
             categ.append(vts)
-
         separ = ','
         categ_list = separ.join(categ)
         categ_list = '--script='+categ_list
