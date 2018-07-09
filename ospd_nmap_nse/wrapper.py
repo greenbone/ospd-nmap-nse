@@ -27,6 +27,7 @@ import string
 import subprocess
 import nmap
 import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as secET
 
 from os import listdir
 from itertools import product
@@ -242,7 +243,7 @@ class OSPDnmap_nse(OSPDaemon):
         if result is None:
             return False
 
-        tree = ET.fromstring(result)
+        tree = secET.fromstring(result)
         if tree.tag != 'nmaprun':
             return False
 
