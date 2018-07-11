@@ -339,6 +339,25 @@ class OSPDnmap_nse(OSPDaemon):
                                       name='Nmap port detection',
                                       port='{0}/tcp'.format(port))
 
+
+    def process_vts(self, vts):
+        """ Add single scripts and script's arguments. """
+        script = []
+        args = []
+
+        for memb in vts.items():
+            script.append(memb[0])
+            for i in memb[1].items():
+                param = '{0}={1}'.format(i[0], i[1]['value'])
+                args.append(param)
+
+        separ = ','
+        script_list = separ.join(script)
+        script_args = ''
+        if args:
+            script_args = separ.join(args)
+        return script_list, script_args
+
     def exec_scan(self, scan_id, target):
         """ Starts the nmap scanner for scan_id scan. """
 
@@ -367,13 +386,16 @@ class OSPDnmap_nse(OSPDaemon):
                 categ.append(BOOL_CATEGORIES_DIC[opt])
 
         # Add single VTs
-        if self.get_scan_vts(scan_id) != '':
-            vts = self.get_scan_vts(scan_id)
-            categ.append(vts)
+        scripts = self.get_scan_vts(scan_id)
+        if scripts != '':
+            script_list, script_args = self. process_vts(scripts)
+            categ.append(script_list)
         separ = ','
         categ_list = separ.join(categ)
         categ_list = '--script='+categ_list
         command_str.append(categ_list)
+        script_args_str = "--script-args='{0}'".format(script_args)
+
         separ = ' '
         arg_list = separ.join(command_str)
 
