@@ -31,4 +31,8 @@ $ gvm-cli socket --sockpath <prefix>/var/run/ospd-nmap-nse.sock --xml="<start_sc
 
 Selecting a single NSE script (a VT), for example "address-info.nse":
 
-$ gvm-cli socket --sockpath <prefix>/var/run/ospd-nmap-nse.sock --xml="<start_scan target='127.0.0.1' ports='T:1-1024'><scanner_params><pingscan>0</pingscan><allhoston>0</allhoston><vts>address-info.nse</vts></scanner_params></start_scan>"
+$ gvm-cli socket --sockpath <prefix>/var/run/ospd-nmap-nse.sock --xml="<start_scan target='127.0.0.1' ports='T:1-1024'><scanner_params><pingscan>0</pingscan><allhoston>0</allhoston></scanner_params><vts><vt id='address-info.nse' /></vts></start_scan>"
+
+Selecting a single NSE script (a VT) and script arguments, for example "smb-psexec.nse":
+
+$ gvm-cli socket --sockpath /tmp/nmap-nse.sock --xml "<start_scan target='192.168.10.133' ports='445'><scanner_params><pingscan>0</pingscan><allhoston>0</allhoston><default>0</default></scanner_params><vts><vt id='smb-psexec'><vt_param name='smbuser'>msfadmin</vt_param><vt_param name='smbpass'>msfadmin</vt_param><vt_param name='config'>example</vt_param><vt_param name='host'>1.2.3.4</vt_param></vt></vts></start_scan>"
