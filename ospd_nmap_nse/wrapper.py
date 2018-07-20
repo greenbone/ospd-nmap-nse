@@ -318,7 +318,7 @@ class OSPDnmap_nse(OSPDaemon):
             except KeyError:
                 None
             for script in scripts:
-                self.add_scan_log(scan_id, host=target, name=('NSE ' +
+                self.add_scan_log(scan_id, host=host, name=('NSE ' +
                                                               script['id']),
                                   value=script['output'])
 
@@ -330,14 +330,33 @@ class OSPDnmap_nse(OSPDaemon):
             for port in ports:
                 if ('script' in ports[port]):
                     for script in ports[port]['script'].keys():
-                        self.add_scan_log(scan_id, host=target, name=('NSE ' +
+                        self.add_scan_log(scan_id, host=host, name=('NSE ' +
                                                                       script),
                                           value=ports[port]['script'][script],
                                           port='{0}/tcp'.format(port))
                 else:
-                    self.add_scan_log(scan_id, host=target,
+                    self.add_scan_log(scan_id, host=host,
                                       name='Nmap port detection',
                                       port='{0}/tcp'.format(port))
+
+    @staticmethod
+    def process_vts(vts):
+        """ Add single scripts and script's arguments. """
+        script = []
+        args = []
+
+        for memb in vts.items():
+            script.append(memb[0])
+            for i in memb[1].items():
+                param = '{0}={1}'.format(i[0], i[1]['value'])
+                args.append(param)
+
+        separ = ','
+        script_list = separ.join(script)
+        script_args = ''
+        if args:
+            script_args = separ.join(args)
+        return script_list, script_args
 
     def exec_scan(self, scan_id, target):
         """ Starts the nmap scanner for scan_id scan. """
@@ -367,16 +386,21 @@ class OSPDnmap_nse(OSPDaemon):
                 categ.append(BOOL_CATEGORIES_DIC[opt])
 
         # Add single VTs
-        if self.get_scan_vts(scan_id) != '':
-            vts = self.get_scan_vts(scan_id)
-            categ.append(vts)
+        script_args = ''
+        scripts = self.get_scan_vts(scan_id)
+        if scripts:
+            script_list, script_args = self.process_vts(scripts)
+            categ.append(script_list)
         separ = ','
         categ_list = separ.join(categ)
-        categ_list = '--script='+categ_list
+        categ_list = '--script=' + categ_list
         command_str.append(categ_list)
+        if script_args:
+            script_args_str = "--script-args='{0}'".format(script_args)
+            command_str.append(script_args_str)
+
         separ = ' '
         arg_list = separ.join(command_str)
-
         # Run Nmap
         result = None
         nm = nmap.PortScanner()
@@ -403,12 +427,11 @@ class OSPDnmap_nse(OSPDaemon):
         # Create a general log entry about executing nmap
         # It is important to send at least one result, else
         # the host details won't be stored.
-        summary = ('Nmap done at {0}; {1} IP address ' +
-                   '({2} host up) scanned in {3} seconds'.format(
-                       nm.scanstats()['timestr'],
-                       nm.scanstats()['totalhosts'],
-                       nm.scanstats()['uphosts'],
-                       nm.scanstats()['elapsed'],))
+        summary = ('Nmap done at {0}; {1} IP address ({2} host up) scanned in {3} seconds'.format(
+            nm.scanstats()['timestr'],
+            nm.scanstats()['totalhosts'],
+            nm.scanstats()['uphosts'],
+            nm.scanstats()['elapsed'],))
         self.add_scan_log(scan_id, host=target, name='Nmap summary',
                           value=summary)
 
