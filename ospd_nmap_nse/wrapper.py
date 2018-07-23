@@ -361,15 +361,17 @@ class OSPDnmap_nse(OSPDaemon):
     def exec_scan(self, scan_id, target):
         """ Starts the nmap scanner for scan_id scan. """
 
-        ports = self.get_scan_ports(scan_id)
+        ports = self.get_scan_ports(scan_id, target)
         options = self.get_scan_options(scan_id)
         dump = options.get('dumpxml')
 
         # Add default options to nmap command string, that is scan
         # for udp/tcp port and output in xml format.
         command_str = ['-sT', ]
-        if 'U' in ports:
+        if ports and 'U' in ports:
             command_str.append('-sU')
+        if ports == '':
+            ports = None
 
         # Add all enabled options
         # All boole options
