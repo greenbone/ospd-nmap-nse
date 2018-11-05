@@ -41,7 +41,7 @@ from ospd_nmap_nse import __version__
 OSPD_DESC = """
 This scanner runs the NSE scripts of the tool 'nmap' to scan target hosts.
 
-This tool is availble for most operating systems and identifies open ports,
+This tool is available for most operating systems and identifies open ports,
 probes the services, operating systems and even can run more sophisticated
 detection routines.
 
