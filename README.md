@@ -2,6 +2,8 @@
 
 # ospd-nmap-nse
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/greenbone/ospd-nmap-nse/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/greenbone/ospd-nmap-nse/?branch=master)
+
 This is an OSP server implementation to allow GVM to remotely control
 the `nmap` port scanner and use it to execute scripts using the Nmap Scripting
 Engine (NSE).
